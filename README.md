@@ -10,7 +10,7 @@ Desenvolvido como parte de um teste técnico da Shopper, este aplicativo integra
 - [Visão Geral](#-visão-geral)
 - [Recursos](#-recursos)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [Pré-requisitos](#-pr%C3%A9-requisitos)
+- [Pré-requisitos](#-pré-requisitos)
 - [Instalação e Execução](#-instalação-e-execução)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
 - [Endpoints da API](#-endpoints-da-api)
