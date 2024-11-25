@@ -3,7 +3,7 @@
 
 **Ride Service** é uma aplicação fullstack que oferece estimativas, confirmações e o histórico de corridas. O sistema integra uma API para fornecer estimativas de preço, tempo e distância das viagens, além de permitir a escolha de motoristas. A interface do frontend interage diretamente com o backend, proporcionando uma experiência completa ao usuário.
 
-Desenvolvido como parte de um teste técnico da NomeDaEmpresa, este aplicativo integra a API do Google Maps para gerar dados detalhados sobre a rota entre dois pontos, incluindo distância, tempo estimado e o valor da viagem, com base nas opções de motoristas disponíveis. O sistema permite que o usuário informe a origem e o destino, e retorna as informações sobre a viagem, incluindo a lista de corridas confirmadas.
+Desenvolvido como parte de um teste técnico da Shopper, este aplicativo integra a API do Google Maps para gerar dados detalhados sobre a rota entre dois pontos, incluindo distância, tempo estimado e o valor da viagem, com base nas opções de motoristas disponíveis. O sistema permite que o usuário informe a origem e o destino, e retorna as informações sobre a viagem, incluindo a lista de corridas confirmadas.
 
 ----------
 ## 📋 **Índice**
