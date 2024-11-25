@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { ApiError } from "../types/ApiError";
 
 const client: AxiosInstance = axios.create({
-  baseURL: "http://backend:8080/ride",
+  baseURL: "http://localhost:8080/ride",
 });
 
 client.interceptors.response.use(
