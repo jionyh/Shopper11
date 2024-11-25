@@ -181,7 +181,13 @@ GOOGLE_API_KEY=sua_chave_da_api_google_aqui
 ```
 
 ### **Imagem da Rota**
--  **GET**  `/ride/route-image`
+-  **GET**  `/ride/route-image/?origin={latitude,longitude}&destination={latitude,longitude}`
 -  **Descrição**: Retorna uma imagem da rota calculada.
+-**Resposta**
+```bash
+{
+  "imageData": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+}
+```
 
   
