@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Driver {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  vehicle     String
+  tax         Int
+  min_km      Int
+  Ride        Ride[]
+  Review      Review[]
+}
+
+model Review {
+  id       Int    @id @default(autoincrement())
+  rating   Int
+  comment  String
+  Driver   Driver @relation(fields: [driverId], references: [id])
+  driverId Int
+}
+
+model Ride {
+  id          Int      @id @default(autoincrement())
+  customer_id String
+  date        DateTime
+  origin      String
+  destination String
+  distance    Int
+  duration    String
+  value       Int
+  driver      Driver   @relation(fields: [driverId], references: [id])
+  driverId    Int
+}
