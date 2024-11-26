@@ -8,7 +8,7 @@ type LandingRightProps = {
 };
 
 export const LandingRight = ({ children }: LandingRightProps) => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const steps = [
     {
       svg: step1,
@@ -37,13 +37,8 @@ export const LandingRight = ({ children }: LandingRightProps) => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center space-y-8 p-6">
-      <h2 className="text-center text-2xl font-semibold text-gray-800">
-        Veja como é fácil solicitar sua viagem!
-      </h2>
-      <p className="text-center text-gray-600">
-        Basta seguir os passos abaixo para chegar ao seu destino de forma
-        prática e confortável.
-      </p>
+      <h2 className="text-center text-2xl font-semibold text-gray-800">Veja como é fácil solicitar sua viagem!</h2>
+      <p className="text-center text-gray-600">Basta seguir os passos abaixo para chegar ao seu destino de forma prática e confortável.</p>
 
       <div className="mt-4 flex w-full items-center justify-evenly">
         {steps.map((stepItem, i) => (
@@ -51,21 +46,13 @@ export const LandingRight = ({ children }: LandingRightProps) => {
             key={i}
             className={`flex flex-col items-center space-y-2 p-4 ${step === i + 1 ? "rounded-md border border-blue-500 opacity-100" : "opacity-50"}`}
           >
-            <img
-              src={stepItem.svg}
-              alt={`Passo ${i + 1}`}
-              className="h-32 w-32"
-            />
-            <span className="text-center text-sm font-medium text-gray-700">
-              {stepItem.text}
-            </span>
+            <img src={stepItem.svg} alt={`Passo ${i + 1}`} className="h-32 w-32" />
+            <span className="text-center text-sm font-medium text-gray-700">{stepItem.text}</span>
           </div>
         ))}
       </div>
 
-      <div className="flex w-full items-center justify-center gap-2 sm:justify-end">
-        {children}
-      </div>
+      <div className="flex w-full items-center justify-center gap-2 sm:justify-end">{children}</div>
     </div>
   );
 };

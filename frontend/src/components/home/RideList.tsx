@@ -1,19 +1,6 @@
 import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Header } from "../Header";
 import { useState } from "react";
 import { RideListType } from "../../types/Ride";
@@ -41,6 +28,10 @@ export const RideList = ({ handleClick }: RideListProps) => {
   const { mutate } = useList();
 
   const handleSearch = async () => {
+    if (formData.customer_id === "") {
+      setErrorMessage("O ID do usuário é obrigatório");
+      return;
+    }
     setErrorMessage(null);
     setIsLoading(true);
     mutate(formData, {
@@ -65,9 +56,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
           <p className="m-1">Id de usuário</p>
           <Input
             value={formData.customer_id}
-            onChange={(e) =>
-              setFormData({ ...formData, customer_id: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, customer_id: e.target.value })}
             placeholder="ID do usuário"
             className="w-full sm:w-40"
           />
@@ -75,10 +64,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
 
         <Label className="">
           <p className="m-1">Selecione o motorista</p>
-          <Select
-            value={formData.driver_id}
-            onValueChange={(e) => setFormData({ ...formData, driver_id: e })}
-          >
+          <Select value={formData.driver_id} onValueChange={(e) => setFormData({ ...formData, driver_id: e })}>
             <SelectTrigger className="w-full focus:ring-0 active:ring-0 sm:w-40">
               <SelectValue placeholder="Motorista" />
             </SelectTrigger>
@@ -116,18 +102,10 @@ export const RideList = ({ handleClick }: RideListProps) => {
                   <TableCell>{formatUtils.formatDate(ride.date)}</TableCell>
                   <TableCell>{ride.driver.name}</TableCell>
                   <TableCell>{formatUtils.capitalize(ride.origin)}</TableCell>
-                  <TableCell>
-                    {formatUtils.capitalize(ride.destination)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatUtils.formatDistance(ride.distance)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatUtils.formatDuration(ride.duration)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatUtils.formatValue(ride.value)}
-                  </TableCell>
+                  <TableCell>{formatUtils.capitalize(ride.destination)}</TableCell>
+                  <TableCell className="text-right">{formatUtils.formatDistance(ride.distance)}</TableCell>
+                  <TableCell className="text-right">{formatUtils.formatDuration(ride.duration)}</TableCell>
+                  <TableCell className="text-right">{formatUtils.formatValue(ride.value)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -137,22 +115,14 @@ export const RideList = ({ handleClick }: RideListProps) => {
         <div className="p-10">
           {errorMessage && (
             <div className="flex flex-col items-center justify-center gap-4">
-              <ClipboardX
-                size={100}
-                absoluteStrokeWidth
-                className="text-slate-300/60"
-              />
+              <ClipboardX size={100} absoluteStrokeWidth className="text-slate-300/60" />
               <p className="font-bold text-slate-500">{errorMessage}</p>
             </div>
           )}
 
           {!tableData && !errorMessage && (
             <div className="flex flex-col items-center justify-center gap-4">
-              <TextSearch
-                size={100}
-                absoluteStrokeWidth
-                className="text-slate-300/60"
-              />
+              <TextSearch size={100} absoluteStrokeWidth className="text-slate-300/60" />
               <p>Busque por uma viagem!</p>
             </div>
           )}

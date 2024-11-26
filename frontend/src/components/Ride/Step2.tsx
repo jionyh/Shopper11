@@ -10,11 +10,7 @@ type Step2Props = {
   data: Step1Data;
 };
 export const Step2 = ({ data, handleStep2 }: Step2Props) => {
-  const {
-    data: mapData,
-    isLoading,
-    isFetching,
-  } = useRouteMap(data.origin, data.destination);
+  const { data: mapData, isLoading, isFetching } = useRouteMap(data.origin, data.destination);
 
   const handleStep2Button = (driver: Driver) => {
     const step2Data: Step2Type = {
@@ -38,9 +34,9 @@ export const Step2 = ({ data, handleStep2 }: Step2Props) => {
         <Skeleton className="h-[250px] w-[250px] rounded-lg sm:h-[300px] sm:w-[300px]" />
       ) : (
         mapData &&
-        mapData.data.image && (
+        mapData.data.imageData && (
           <img
-            src={`data:image/png;base64,${mapData.data.image}`}
+            src={`data:image/png;base64,${mapData.data.imageData}`}
             alt="Mapa da rota"
             className="h-[250px] w-[250px] rounded-lg sm:h-[300px] sm:w-[300px]"
           />
