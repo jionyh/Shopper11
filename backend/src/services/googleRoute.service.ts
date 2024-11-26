@@ -3,7 +3,7 @@ import axios from "axios";
 import { RideDto } from "../@types/Ride";
 import { RouteResponse } from "../@types/GoogleMapsApi";
 
-export const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteResponse> => {
+const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteResponse> => {
   const requestBody = {
     origin: {
       address: origin,
@@ -22,7 +22,7 @@ export const estimateRoute = async ({ origin, destination }: RideDto): Promise<R
   return res.data;
 };
 
-export const generateImage = async ({ origin, destination }: RideDto) => {
+const generateImage = async ({ origin, destination }: RideDto) => {
   if (!origin || !destination) {
     throw new Error("Os campos origin e destination são obrigatórios.");
   }
@@ -45,7 +45,7 @@ export const generateImage = async ({ origin, destination }: RideDto) => {
   }
 };
 
-export const getRoutePolyline = async ({ origin, destination }: RideDto) => {
+const getRoutePolyline = async ({ origin, destination }: RideDto) => {
   const googleApiKey = process.env.GOOGLE_API_KEY;
 
   if (!origin || !destination) {
@@ -65,3 +65,5 @@ export const getRoutePolyline = async ({ origin, destination }: RideDto) => {
     throw new Error("Erro ao buscar a rota");
   }
 };
+
+export default { estimateRoute, generateImage, getRoutePolyline };

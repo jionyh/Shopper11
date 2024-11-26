@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Review } from "./Review";
 
 export type Driver = {
@@ -8,3 +9,5 @@ export type Driver = {
   review: Review;
   value: number;
 };
+
+export interface DriverResponse extends Prisma.DriverGetPayload<{ include: { Review: true } }> {}

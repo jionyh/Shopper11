@@ -1,8 +1,9 @@
 import { ErrorResponse } from "../@types/ErrorResponse";
 import { ConfirmRideDto, ConfirmRideResponse, EstimateResponseDto, ListRideResponse, Ride, RideDto } from "../@types/Ride";
 import { prisma } from "../libs/prisma";
+import { estimateRiderMapper } from "../mappers/ride.mapper";
 import driverService from "./driver.service";
-import { estimateRoute } from "./googleRoute.service";
+import googleRouteService from "./googleRoute.service";
 
 async function estimate(data: RideDto): Promise<EstimateResponseDto | ErrorResponse> {
   const { origin, destination, customer_id } = data;
@@ -12,40 +13,15 @@ async function estimate(data: RideDto): Promise<EstimateResponseDto | ErrorRespo
   if (emptyFields || addressIsEqual) {
     return { error_code: "INVALID_DATA", error_description: "Os dados fornecidos no corpo da requisição são inválidos" };
   }
-  const estimate = await estimateRoute({ origin, destination });
+  const estimate = await googleRouteService.estimateRoute({ origin, destination });
 
-  const drivers = await driverService.findDrivers(estimate.routes[0].distanceMeters / 1000);
+  const kmDistance = estimate.routes[0].distanceMeters / 1000 >= 1 ? estimate.routes[0].distanceMeters / 1000 : 1;
 
-  if (!drivers) {
+  const drivers = await driverService.findDrivers(estimate.routes[0].distanceMeters);
+  if (!drivers || drivers.length === 0) {
     return { error_code: "INVALID_DATA", error_description: "Os dados fornecidos no corpo da requisição são inválidos" };
   }
-
-  return {
-    origin: {
-      latitude: estimate.routes[0].legs[0].startLocation.latLng.latitude,
-      longitude: estimate.routes[0].legs[0].startLocation.latLng.longitude,
-    },
-    destination: {
-      latitude: estimate.routes[0].legs[0].endLocation.latLng.latitude,
-      longitude: estimate.routes[0].legs[0].endLocation.latLng.longitude,
-    },
-    distance: estimate.routes[0].distanceMeters,
-    duration: estimate.routes[0].duration,
-    options: drivers.map((driver: { id: any; name: any; description: any; vehicle: any; Review: { comment: string,rating:number }[]; tax: number; }) => {
-      return {
-        id: driver.id,
-        name: driver.name,
-        description: driver.description,
-        vehicle: driver.vehicle,
-        review: {
-          rating: driver.Review[0].rating,
-          comment: driver.Review[0].comment,
-        },
-        value: driver.tax * (estimate.routes[0].distanceMeters / 1000),
-      };
-    }),
-    routeResponse: estimate,
-  };
+  return estimateRiderMapper(estimate, drivers);
 }
 
 async function confirm(data: ConfirmRideDto): Promise<ConfirmRideResponse | ErrorResponse> {
@@ -129,7 +105,7 @@ async function list(customer_id: string, driver_id: string): Promise<ListRideRes
 
   return {
     customer_id,
-    rides: rides.map((ride:Ride) => {
+    rides: rides.map((ride: Ride) => {
       return {
         id: ride.id,
         date: ride.date,
