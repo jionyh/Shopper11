@@ -10,6 +10,7 @@ import { useList } from "../../api/Mutations";
 import { ClipboardX, TextSearch } from "lucide-react";
 import formatUtils from "../../utils/formatUtils";
 import { viewType } from "../../types/View";
+import { Loader } from "../Loader";
 
 type RideListProps = {
   handleClick: (type: viewType) => void;
@@ -119,6 +120,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
               <p className="font-bold text-slate-500">{errorMessage}</p>
             </div>
           )}
+          {isLoading && <Loader />}
 
           {!tableData && !errorMessage && (
             <div className="flex flex-col items-center justify-center gap-4">
