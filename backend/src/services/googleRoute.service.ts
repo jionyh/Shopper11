@@ -2,8 +2,10 @@ import { decode } from "@googlemaps/polyline-codec";
 import axios from "axios";
 import { RideDto } from "../@types/Ride";
 import { RouteResponse } from "../@types/GoogleMapsApi";
+import { ERROR_MESSAGES } from "../constants/error";
+import { ErrorResponse } from "../@types/ErrorResponse";
 
-const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteResponse> => {
+const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteResponse | ErrorResponse> => {
   const requestBody = {
     origin: {
       address: origin,
@@ -18,17 +20,30 @@ const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteRes
     "X-Goog-Api-Key": process.env.GOOGLE_API_KEY,
   };
 
-  const res = await axios.post("https://routes.googleapis.com/directions/v2:computeRoutes", requestBody, { headers: headersConfig });
-  return res.data;
+  try {
+    const res = await axios.post("https://routes.googleapis.com/directions/v2:computeRoutes", requestBody, { headers: headersConfig });
+    if (!res.data.routes || res.data.routes.length === 0) {
+      return ERROR_MESSAGES.NO_RIDES_FOUND;
+    }
+    return res.data;
+  } catch (error) {
+    return ERROR_MESSAGES.GOOGLE_API_ERROR;
+  }
 };
 
-const generateImage = async ({ origin, destination }: RideDto) => {
+const generateImage = async ({ origin, destination }: RideDto): Promise<{ imageData: string } | ErrorResponse> => {
   if (!origin || !destination) {
-    throw new Error("Os campos origin e destination são obrigatórios.");
+    return ERROR_MESSAGES.INVALID_DATA;
   }
 
   const googleApiKey = process.env.GOOGLE_API_KEY;
-  const coords = decode(await getRoutePolyline({ origin, destination }));
+  const polyline = await getRoutePolyline({ origin, destination });
+
+  if (typeof polyline === "object" && "error_code" in polyline) {
+    return polyline;
+  }
+
+  const coords = decode(polyline);
   const path = coords.map((point) => `${point[0]},${point[1]}`).join("|");
 
   const routeImageUrl = `https://maps.googleapis.com/maps/api/staticmap?size=400x400&markers=${origin}&markers=${destination}&path=color:0x0000ff|weight:5|${path}&key=${googleApiKey}`;
@@ -41,15 +56,15 @@ const generateImage = async ({ origin, destination }: RideDto) => {
       imageData: imageBase64,
     };
   } catch (error) {
-    throw new Error("Erro ao gerar a imagem do mapa.");
+    return ERROR_MESSAGES.IMAGE_GENERATION_ERROR;
   }
 };
 
-const getRoutePolyline = async ({ origin, destination }: RideDto) => {
+const getRoutePolyline = async ({ origin, destination }: RideDto): Promise<string | ErrorResponse> => {
   const googleApiKey = process.env.GOOGLE_API_KEY;
 
   if (!origin || !destination) {
-    throw new Error("Os campos origin e destination são obrigatórios.");
+    return ERROR_MESSAGES.INVALID_DATA;
   }
   const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${googleApiKey}`;
 
@@ -59,10 +74,10 @@ const getRoutePolyline = async ({ origin, destination }: RideDto) => {
       const polyline = response.data.routes[0].overview_polyline.points;
       return polyline;
     } else {
-      throw new Error("Nenhuma rota encontrada para os pontos fornecidos");
+      return ERROR_MESSAGES.ROUTE_NOT_FOUND;
     }
   } catch (error) {
-    throw new Error("Erro ao buscar a rota");
+    return ERROR_MESSAGES.GOOGLE_API_ERROR;
   }
 };
 

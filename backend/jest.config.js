@@ -4,4 +4,5 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)sx?$': '@swc/jest',
   },
+  setupFilesAfterEnv: ['<rootDir>/src/singleton.ts'],
 };

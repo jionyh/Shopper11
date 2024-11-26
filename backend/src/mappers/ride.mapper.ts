@@ -1,18 +1,22 @@
+import { EstimateResponseDto, Ride } from "../@types/Ride";
+import { calculateValue } from "../utils/calculateValue";
 import { DriverResponse } from "./../@types/Driver";
 import { RouteResponse } from "./../@types/GoogleMapsApi";
-export const estimateRiderMapper = (estimate: RouteResponse, drivers: DriverResponse[]) => {
+export const estimateRideMapper = (estimate: RouteResponse, drivers: DriverResponse[]): EstimateResponseDto => {
+  const { routes } = estimate;
+  const { legs } = routes[0];
   return {
     origin: {
-      latitude: estimate.routes[0].legs[0].startLocation.latLng.latitude,
-      longitude: estimate.routes[0].legs[0].startLocation.latLng.longitude,
+      latitude: legs[0].startLocation.latLng.latitude,
+      longitude: legs[0].startLocation.latLng.longitude,
     },
     destination: {
-      latitude: estimate.routes[0].legs[0].endLocation.latLng.latitude,
-      longitude: estimate.routes[0].legs[0].endLocation.latLng.longitude,
+      latitude: legs[0].endLocation.latLng.latitude,
+      longitude: legs[0].endLocation.latLng.longitude,
     },
-    distance: estimate.routes[0].distanceMeters,
-    duration: estimate.routes[0].duration,
-    options: drivers.map((driver: { id: any; name: any; description: any; vehicle: any; Review: { comment: string; rating: number }[]; tax: number }) => {
+    distance: routes[0].distanceMeters,
+    duration: routes[0].duration,
+    options: drivers.map((driver: DriverResponse) => {
       return {
         id: driver.id,
         name: driver.name,
@@ -22,9 +26,27 @@ export const estimateRiderMapper = (estimate: RouteResponse, drivers: DriverResp
           rating: driver.Review[0].rating,
           comment: driver.Review[0].comment,
         },
-        value: driver.tax * (estimate.routes[0].distanceMeters / 1000),
+        value: calculateValue(routes[0].distanceMeters, driver.tax),
       };
     }),
     routeResponse: estimate,
   };
+};
+
+export const listRideMapper = (rides: Ride[]) => {
+  return rides.map((ride: Ride) => {
+    return {
+      id: ride.id,
+      date: ride.date,
+      origin: ride.origin,
+      destination: ride.destination,
+      distance: ride.distance,
+      duration: ride.duration,
+      driver: {
+        id: ride.driver.id,
+        name: ride.driver.name,
+      },
+      value: ride.value,
+    };
+  });
 };

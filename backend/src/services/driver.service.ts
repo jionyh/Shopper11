@@ -1,6 +1,6 @@
-import { prisma } from "../libs/prisma";
+import prisma from "../libs/prisma";
 
-async function findDrivers(min_km?: number) {
+async function findDrivers(min_km: number) {
   try {
     return await prisma.driver.findMany({
       where: {
@@ -16,6 +16,7 @@ async function findDrivers(min_km?: number) {
       },
     });
   } catch (e) {
+    //TODO tratar erro aqui
     console.log(e);
   }
 }
@@ -27,6 +28,7 @@ async function findDriverById(id: number) {
       },
     });
   } catch (e) {
+    //TODO tratar erro aqui
     console.log(e);
   }
 }

@@ -4,5 +4,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npx prisma generate
+RUN npm run build
 EXPOSE 8080
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run build && node ./dist/main.js"]
+CMD ["sh", "-c", "node ./dist/main.js"]

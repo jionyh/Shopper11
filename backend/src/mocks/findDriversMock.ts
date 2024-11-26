@@ -44,8 +44,8 @@ export const driversMock = [
   },
 ];
 
-export const mockFindDrivers = jest.fn().mockImplementation((km: number) => {
-  const driver = driversMock.find((driver) => driver.min_km >= km);
+export const mockFindDrivers = jest.fn().mockImplementation((min_km: number) => {
+  const driver = driversMock.filter((driver) => driver.min_km <= min_km);
   return driver;
 });
 
