@@ -1,4 +1,4 @@
-import { EstimateResponseDto, ListRideResponse } from "../@types/Ride";
+import { EstimateResponse, ListRideResponse } from "../@types/Ride";
 import { mockEstimateRoute, mockRoutes } from "../mocks/estimateRouteMock";
 import { mockFindDrivers, mockFindDriverById } from "../mocks/findDriversMock";
 import { mockPrismaFindMany } from "../mocks/rideMock";
@@ -46,20 +46,20 @@ describe("Ride Service", () => {
     });
 
     it("should successful estimate a ride", async () => {
-      //Teste de sucesso com a opção de distance menor que 1km
+      //Teste de sucesso com a opção de distance de 1km
       const dataRoute = {
-        routes: mockRoutes.map((route) => ({ ...route, distanceMeters: 800 })),
+        routes: mockRoutes.map((route) => ({ ...route, distanceMeters: 1000 })),
       };
       mockGoogleRouteEstimateFn.mockResolvedValue(dataRoute);
-      const result = (await rideService.estimate(data)) as EstimateResponseDto;
+      const result = (await rideService.estimate(data)) as EstimateResponse;
       expect(mockGoogleRouteEstimateFn).toHaveBeenCalledTimes(1);
       expect(mockFindDriversFn).toHaveBeenCalledWith(1);
       expect(result.destination).toEqual({
         latitude: expect.any(Number),
         longitude: expect.any(Number),
       });
-      expect(result.options).toHaveLength(1); // Só tem 1 motorista que aceita menos de 1km
-      expect(result.options[0]).toHaveProperty("value", 2); // Verifica se o calculo está correto R$ 2.50 * 0.8
+      expect(result.options).toHaveLength(1); // Só tem 1 motorista que aceita 1km - Homer
+      expect(result.options[0]).toHaveProperty("value", 2.5); // Verifica se o calculo está correto R$ 2.50 * 1
     });
   });
 

@@ -1,8 +1,7 @@
-import { EstimateResponseDto, Ride } from "../@types/Ride";
-import { calculateValue } from "../utils/calculateValue";
+import { EstimateResponse, Ride } from "../@types/Ride";
 import { DriverResponse } from "./../@types/Driver";
 import { RouteResponse } from "./../@types/GoogleMapsApi";
-export const estimateRideMapper = (estimate: RouteResponse, drivers: DriverResponse[]): EstimateResponseDto => {
+export const estimateRideMapper = (estimate: RouteResponse, drivers: DriverResponse[]): EstimateResponse => {
   const { routes } = estimate;
   const { legs } = routes[0];
   return {
@@ -26,7 +25,7 @@ export const estimateRideMapper = (estimate: RouteResponse, drivers: DriverRespo
           rating: driver.Review[0].rating,
           comment: driver.Review[0].comment,
         },
-        value: calculateValue(routes[0].distanceMeters, driver.tax),
+        value: (routes[0].distanceMeters / 1000) * driver.tax,
       };
     }),
     routeResponse: estimate,

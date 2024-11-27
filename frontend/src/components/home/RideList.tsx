@@ -54,7 +54,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
 
       <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-end sm:gap-2">
         <Label className="">
-          <p className="m-1">Id de usuário</p>
+          <span className="mb-1 pl-2 text-xs text-gray-500">Id de usuário</span>
           <Input
             value={formData.customer_id}
             onChange={(e) => setFormData({ ...formData, customer_id: e.target.value })}
@@ -64,7 +64,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
         </Label>
 
         <Label className="">
-          <p className="m-1">Selecione o motorista</p>
+          <span className="mb-1 pl-2 text-xs text-gray-500">Selecione o motorista</span>
           <Select value={formData.driver_id} onValueChange={(e) => setFormData({ ...formData, driver_id: e })}>
             <SelectTrigger className="w-full focus:ring-0 active:ring-0 sm:w-40">
               <SelectValue placeholder="Motorista" />
@@ -99,7 +99,7 @@ export const RideList = ({ handleClick }: RideListProps) => {
             </TableHeader>
             <TableBody>
               {tableData.rides.map((ride) => (
-                <TableRow key={ride.id}>
+                <TableRow key={ride.id} className="text-xs">
                   <TableCell>{formatUtils.formatDate(ride.date)}</TableCell>
                   <TableCell>{ride.driver.name}</TableCell>
                   <TableCell>{formatUtils.capitalize(ride.origin)}</TableCell>

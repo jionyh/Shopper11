@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Step1,Step2,Step3 } from "../Ride/Index";
+import { Step1, Step2, Step3 } from "../Ride/Index";
 import { Step1Form, Step1Data } from "../../types/Step1";
 import { useRideConfirm, useRideEstimate } from "../../api/Mutations";
 import { Header } from "../Header";
@@ -75,12 +75,10 @@ export const NewRide = ({ setView }: NewRideProps) => {
   return (
     <div className="w-full">
       {step !== 3 && <Header onBack={handleOnBack} />}
-      <div className="flex px-10">
+      <div className="flex px-2 sm:px-10">
         {isLoading && <Loader />}
         {step === 1 && <Step1 handleStep1={handleStep1} error={error} />}
-        {!isLoading && step1Data && step === 2 && (
-          <Step2 data={step1Data} handleStep2={handleStep2} />
-        )}
+        {!isLoading && step1Data && step === 2 && <Step2 data={step1Data} handleStep2={handleStep2} />}
         {step === 3 && <Step3 />}
       </div>
     </div>

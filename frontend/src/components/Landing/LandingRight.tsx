@@ -36,15 +36,17 @@ export const LandingRight = ({ children }: LandingRightProps) => {
   }, [step]);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center space-y-8 p-6">
-      <h2 className="text-center text-2xl font-semibold text-gray-800">Veja como é fácil solicitar sua viagem!</h2>
-      <p className="text-center text-gray-600">Basta seguir os passos abaixo para chegar ao seu destino de forma prática e confortável.</p>
+    <div className="flex h-full w-full flex-col items-center justify-between sm:space-y-8 sm:p-6">
+      <div className="space-y-8 sm:pt-20">
+        <h2 className="text-center text-2xl font-semibold text-gray-800">Veja como é fácil solicitar sua viagem!</h2>
+        <p className="text-center text-gray-600">Basta seguir os passos abaixo para chegar ao seu destino de forma prática e confortável.</p>
+      </div>
 
-      <div className="mt-4 flex w-full items-center justify-evenly">
+      <div className="my-4 flex w-full items-center justify-evenly ">
         {steps.map((stepItem, i) => (
           <div
             key={i}
-            className={`flex flex-col items-center space-y-2 p-4 ${step === i + 1 ? "rounded-md border border-blue-500 opacity-100" : "opacity-50"}`}
+            className={`flex flex-col items-center sm:space-y-2 transition p-2 sm:p-4 ${step === i + 1 ? "rounded-md border border-blue-500 opacity-100" : "opacity-30"}`}
           >
             <img src={stepItem.svg} alt={`Passo ${i + 1}`} className="h-32 w-32" />
             <span className="text-center text-sm font-medium text-gray-700">{stepItem.text}</span>

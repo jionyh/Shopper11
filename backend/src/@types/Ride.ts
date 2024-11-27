@@ -11,7 +11,7 @@ interface LatLng {
   longitude: number;
 }
 
-export type EstimateResponseDto = {
+export type EstimateResponse = {
   origin: LatLng;
   destination: LatLng;
   distance: number;

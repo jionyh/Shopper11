@@ -5,6 +5,8 @@ import { RouteResponse } from "../@types/GoogleMapsApi";
 import { ERROR_MESSAGES } from "../constants/error";
 import { ErrorResponse } from "../@types/ErrorResponse";
 
+const googleApiKey = process.env.GOOGLE_API_KEY;
+
 const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteResponse | ErrorResponse> => {
   const requestBody = {
     origin: {
@@ -17,7 +19,7 @@ const estimateRoute = async ({ origin, destination }: RideDto): Promise<RouteRes
 
   const headersConfig = {
     "X-Goog-FieldMask": "routes.distanceMeters,routes.duration,routes.legs.startLocation,routes.legs.endLocation",
-    "X-Goog-Api-Key": process.env.GOOGLE_API_KEY,
+    "X-Goog-Api-Key": googleApiKey,
   };
 
   try {
@@ -36,7 +38,6 @@ const generateImage = async ({ origin, destination }: RideDto): Promise<{ imageD
     return ERROR_MESSAGES.INVALID_DATA;
   }
 
-  const googleApiKey = process.env.GOOGLE_API_KEY;
   const polyline = await getRoutePolyline({ origin, destination });
 
   if (typeof polyline === "object" && "error_code" in polyline) {
@@ -61,8 +62,6 @@ const generateImage = async ({ origin, destination }: RideDto): Promise<{ imageD
 };
 
 const getRoutePolyline = async ({ origin, destination }: RideDto): Promise<string | ErrorResponse> => {
-  const googleApiKey = process.env.GOOGLE_API_KEY;
-
   if (!origin || !destination) {
     return ERROR_MESSAGES.INVALID_DATA;
   }

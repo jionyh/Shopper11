@@ -39,8 +39,8 @@ const drivers = [
 ];
 
 async function main() {
-  const driverPromises = drivers.map((driver) =>
-    prisma.driver.create({
+  for (const driver of drivers) {
+    await prisma.driver.create({
       data: {
         name: driver.name,
         description: driver.description,
@@ -54,18 +54,14 @@ async function main() {
           },
         },
       },
-    })
-  );
-
-  await Promise.all(driverPromises);
-
+    });
+  }
   console.log("seed completa");
 }
 
 main()
   .catch((e) => {
     console.error(e);
-    process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();

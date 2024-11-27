@@ -15,7 +15,7 @@ model Driver {
   name        String
   description String
   vehicle     String
-  tax         Int
+  tax         Float
   min_km      Int
   Ride        Ride[]
   Review      Review[]
@@ -37,7 +37,7 @@ model Ride {
   destination String
   distance    Int
   duration    String
-  value       Int
+  value       Float
   driver      Driver   @relation(fields: [driverId], references: [id])
   driverId    Int
 }

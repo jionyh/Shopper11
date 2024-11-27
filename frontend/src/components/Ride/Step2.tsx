@@ -29,7 +29,7 @@ export const Step2 = ({ data, handleStep2 }: Step2Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-2 sm:flex-row sm:gap-8">
+    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-8">
       {isLoading || isFetching ? (
         <Skeleton className="h-[250px] w-[250px] rounded-lg sm:h-[300px] sm:w-[300px]" />
       ) : (
@@ -43,7 +43,7 @@ export const Step2 = ({ data, handleStep2 }: Step2Props) => {
         )
       )}
 
-      <div className="w-full">
+      <div className="w-full pb-4">
         <DriverCard dataStep1={data} handleSelectedDriver={handleStep2Button} />
       </div>
     </div>

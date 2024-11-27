@@ -1,12 +1,12 @@
 import { ErrorResponse } from "../@types/ErrorResponse";
-import { ConfirmRideDto, ConfirmRideResponse, EstimateResponseDto, ListRideResponse, Ride, RideDto } from "../@types/Ride";
+import { ConfirmRideDto, ConfirmRideResponse, EstimateResponse, ListRideResponse, Ride, RideDto } from "../@types/Ride";
 import { ERROR_MESSAGES } from "../constants/error";
 import prisma from "../libs/prisma";
 import { estimateRideMapper, listRideMapper } from "../mappers/ride.mapper";
 import driverService from "./driver.service";
 import googleRouteService from "./googleRoute.service";
 
-async function estimate(data: RideDto): Promise<EstimateResponseDto | ErrorResponse> {
+async function estimate(data: RideDto): Promise<EstimateResponse | ErrorResponse> {
   const { origin, destination, customer_id } = data;
 
   if (!validateOriginAndDestination(origin, destination) || !customer_id) {
@@ -16,10 +16,12 @@ async function estimate(data: RideDto): Promise<EstimateResponseDto | ErrorRespo
 
   if (typeof estimate === "object" && "error_code" in estimate) return estimate;
 
-  const kmDistance = estimate.routes[0].distanceMeters / 1000 >= 1 ? estimate.routes[0].distanceMeters / 1000 : 1;
+  const kmDistance = estimate.routes[0].distanceMeters / 1000;
 
   const drivers = await driverService.findDrivers(kmDistance);
+
   if (!drivers || drivers.length === 0) {
+    //Acho que aqui deveria ser DRIVER_NOT_FOUND, mas estou seguindo os requisitos
     return ERROR_MESSAGES.INVALID_DATA;
   }
   return estimateRideMapper(estimate, drivers);
@@ -93,22 +95,20 @@ async function list(customer_id: string, driver_id?: string): Promise<ListRideRe
 }
 
 function validateOriginAndDestination(origin: string, destination: string) {
-  const equal = areEqual(origin, destination);
   if (!origin || !destination || areEqual(origin, destination)) return false;
   return true;
 }
 
+//Função para normalizar o texto e verificar se os endereços são iguais, resolvi limpar toda a string para compará-la
 function normalizeText(text: string): string {
   return (
     text
       // Converte todos os caracteres para minúsculos
       .toLowerCase()
-      // Remove todos os espaços em branco (um ou mais) da string
+      // Remove todos os espaços em branco da string
       .replace(/\s+/g, "")
-      // Remove espaços em branco no início e no fim da string
-      .replace(/^\s+|\s+$/g, "")
-      // Remove caracteres não alfanuméricos e não-espacos
-      .replace(/[^\w\s]/g, "")
+      // Remove caracteres que nao sejam letras ou números
+      .replace(/[^\w]/g, "")
       // Remove os caracteres "-" e "_"
       .replace(/[-_]/g, "")
   );
